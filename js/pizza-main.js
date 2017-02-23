@@ -449,9 +449,10 @@ var resizePizzas = function(size) {
   // Then iterates through them again to assign new width
   function changePizzaSizes(size) {
     var allPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
+    var numPizzas = allPizzaContainers.length;
     var newWidthArray = [];
 
-    for (var i = 0; i < allPizzaContainers.length; i++) {
+    for (var i = 0; i < numPizzas; i++) {
       var oldWidth = allPizzaContainers[i].offsetWidth;
       var oldSize = oldWidth / windowWidth;
       var dx = determineDx(oldSize, size);
@@ -459,7 +460,7 @@ var resizePizzas = function(size) {
       newWidthArray.push(newwidth);
     }
 
-    for (var i = 0; i < allPizzaContainers.length; i++) {
+    for (var i = 0; i < numPizzas; i++) {
       allPizzaContainers[i].style.width = newWidthArray[i];
     }
   }
