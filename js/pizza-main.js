@@ -421,6 +421,8 @@ var resizePizzas = function(size) {
     }
   }
 
+  changeSliderLabel(size);
+
   // Calculates new width of pizza elements (all have same width)
   // Then iterates through all pizza elements to assign new width
   function changePizzaSizes(size) {
@@ -448,7 +450,6 @@ var resizePizzas = function(size) {
   }
 
   changePizzaSizes(size);
-  changeSliderLabel(size);
 
   // User Timing API is awesome
   window.performance.mark("mark_end_resize");
