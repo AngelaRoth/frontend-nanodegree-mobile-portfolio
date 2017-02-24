@@ -450,30 +450,15 @@ var resizePizzas = function(size) {
   function changePizzaSizes(size) {
     var allPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
     var numPizzas = allPizzaContainers.length;
-    var newWidthArray = [];
+    var oldWidth = allPizzaContainers[0].offsetWidth;
+    var oldSize = oldWidth / windowWidth;
+    var dx = determineDx(oldSize, size);
+    var newWidth = (oldWidth + dx) + 'px';
 
     for (var i = 0; i < numPizzas; i++) {
-      var oldWidth = allPizzaContainers[i].offsetWidth;
-      var oldSize = oldWidth / windowWidth;
-      var dx = determineDx(oldSize, size);
-      var newwidth = (allPizzaContainers[i].offsetWidth + dx) + 'px';
-      newWidthArray.push(newwidth);
-    }
-
-    for (var i = 0; i < numPizzas; i++) {
-      allPizzaContainers[i].style.width = newWidthArray[i];
+      allPizzaContainers[i].style.width = newWidth;
     }
   }
-
-/*
-  function changePizzaSizes(size) {
-    for (var i = 0; i < allPizzaContainers.length; i++) {
-      var dx = determineDx(allPizzaContainers[i], size);
-      var newwidth = (allPizzaContainers[i].offsetWidth + dx) + 'px';
-      allPizzaContainers[i].style.width = newwidth;
-    }
-  }
-*/
 
   changePizzaSizes(size);
   changeSliderLabel(size);
