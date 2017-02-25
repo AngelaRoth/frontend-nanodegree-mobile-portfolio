@@ -402,8 +402,6 @@ var pizzaElementGenerator = function(i) {
 var resizePizzas = function(size) {
   window.performance.mark("mark_start_resize");   // User Timing API function
 
-  var windowWidth = document.querySelector("#randomPizzas").offsetWidth;
-
   // Changes the value for the size of the pizza above the slider
   function changeSliderLabel(size) {
     switch(size) {
@@ -423,8 +421,8 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-  // Calculates new width of pizza elements (all have same width)
-  // Then iterates through all pizza elements to assign new width
+  // Determines new width of pizza elements.
+  // Iterates through all pizza elements to assign new width.
   function changePizzaSizes(size) {
     var allPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
     var numPizzas = allPizzaContainers.length;
