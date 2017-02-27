@@ -380,18 +380,9 @@ var pizzaElementGenerator = function(i) {
   pizzaDescriptionContainer = document.createElement("div");
   pizzaDescriptionContainer.classList.add("pizzaDescriptionContainer");
 
-/*
-  pizzaContainer.style.width = "33.33%";
-  pizzaContainer.style.height = "325px";
-  pizzaContainer.id = "pizza" + i;                // gives each pizza element a unique id
-  pizzaImageContainer.style.width="35%";
-*/
   pizzaImageContainer.appendChild(pizzaImage);
   pizzaContainer.appendChild(pizzaImageContainer);
 
-/*
-  pizzaDescriptionContainer.style.width="65%";
-*/
   pizzaName = document.createElement("h4");
   pizzaName.innerHTML = randomName();
   pizzaDescriptionContainer.appendChild(pizzaName);
@@ -455,31 +446,6 @@ var resizePizzas = function(size) {
     }
   }
 
-/*
-  function changePizzaSizes(size) {
-    var allPizzaContainers = document.querySelectorAll(".randomPizzaContainer");
-    var numPizzas = allPizzaContainers.length;
-    var newWidth;
-
-    switch(size) {
-      case "1":
-        newWidth = 25;
-        break;
-      case "2":
-        newWidth = 33.33;
-        break;
-      case "3":
-        newWidth = 50;
-        break;
-      default:
-        console.log("bug in sizeSwitcher");
-    }
-
-    for (var i = 0; i < numPizzas; i++) {
-      allPizzaContainers[i].style.width = newWidth + '%';
-    }
-  }
-*/
   changePizzaSizes(size);
 
   // User Timing API is awesome
@@ -493,17 +459,10 @@ var resizePizzas = function(size) {
 window.performance.mark("mark_start_generating"); // collect timing data
 
 // This for-loop actually creates and appends all of the pizzas when the page loads
-
-
 for (var i = 2; i < 100; i++) {
   pizzasDiv.appendChild(pizzaElementGenerator(i));
 }
-/*
-for (var i = 2; i < 100; i++) {
-  var pizzasDiv = document.getElementById("randomPizzas");
-  pizzasDiv.appendChild(pizzaElementGenerator(i));
-}
-*/
+
 // User Timing API again. These measurements tell you how long it took to generate the initial pizzas
 window.performance.mark("mark_end_generating");
 window.performance.measure("measure_pizza_generation", "mark_start_generating", "mark_end_generating");
@@ -561,8 +520,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var elem = document.createElement('img');
     elem.className = 'mover';
     elem.src = "img/pizza.png";
+/*
     elem.style.height = "100px";
     elem.style.width = "73.333px";
+*/
     elem.basicLeft = (i % cols) * s;
     elem.style.top = (Math.floor(i / cols) * s) + 'px';
     document.querySelector("#movingPizzas1").appendChild(elem);
