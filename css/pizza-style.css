@@ -36,6 +36,7 @@ form {
 }
 
 .randomPizzaContainer {
+  height: 325px;
   float: left;
   display: flex;
 }
@@ -48,6 +49,14 @@ form {
 
  .container {
   background-color: rgba(240, 60, 60, 0.8);
+}
+
+.pizzaImageContainer {
+  width: 35%;
+}
+
+.pizzaDescriptionContainer {
+  width: 65%;
 }
 
 .smallRandomPizzas .randomPizzaContainer {
