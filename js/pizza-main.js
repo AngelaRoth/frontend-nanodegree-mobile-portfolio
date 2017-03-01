@@ -495,22 +495,25 @@ function updatePositions() {
 
   var ScrollTop = document.body.scrollTop / 1250;
   var phaseArray = [];
+  var moverNumber = 0;
 
   for (var i = 0; i < 5; i++) {
     phaseArray.push(Math.sin(ScrollTop + i));
   }
 
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      moverArray[i][j].style.transform = 'translateX(' + (100 * phaseArray[moverNumber % 5]) + 'px)';
+      moverNumber++;
+    }
+  }
+
+/*
   for (var i = 0; i < numMovers; i++) {
     moverArray[i].style.transform = 'translateX(' + (100 * phaseArray[i % 5]) + 'px)';
   }
-
-
-/*
-  for (var i = 0; i < numItems; i++) {
-    var phase = Math.sin(ScrollTop + (i % 5));
-    items[i].style.left = items[i].basicLeft + 100 * phase + 'px';
-  }
 */
+
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
   window.performance.mark("mark_end_frame");
@@ -523,9 +526,11 @@ function updatePositions() {
 
 // runs updatePositions on scroll
 window.addEventListener('scroll', updatePositions);
-
-
+/*
 var numMovers = 0;
+*/
+var rows = 0;
+var cols = 0;
 var moverArray = [];
 
 function makeMovingPizzas() {
@@ -533,8 +538,8 @@ function makeMovingPizzas() {
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;
   pixelRatio = window.devicePixelRatio;
-  var cols = Math.ceil(bodyWidth / pizzaSpace) + 2;
-  var rows = Math.ceil(screenHeight / pizzaSpace);
+  cols = Math.ceil(bodyWidth / pizzaSpace) + 2;
+  rows = Math.ceil(screenHeight / pizzaSpace);
   console.log('bodyWidth ' + bodyWidth);
   console.log('cols ' + cols);
   console.log('screenHeight ' + screenHeight);
@@ -543,21 +548,21 @@ function makeMovingPizzas() {
 
   for (var i = 0; i < rows; i++) {
     var rowTop = i * pizzaSpace + 'px';
-/*
     moverArray[i] = [];
-*/
     for (var j = 0; j < cols; j++) {
+/*
       numMovers++;
+*/
       var elem = document.createElement('img');
       elem.className = 'mover';
       elem.src = "img/pizza.png";
       elem.style.top = rowTop;
       elem.style.left = j * pizzaSpace + 'px';
-/*
-      moverArray[i][j] = elem;
-*/
-      moverArray.push(elem);
 
+      moverArray[i][j] = elem;
+/*
+      moverArray.push(elem);
+*/
       // replace querySelector with getElementById
       document.getElementById("movingPizzas1").appendChild(elem);
     }
