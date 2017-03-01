@@ -529,78 +529,192 @@ window.addEventListener('scroll', updatePositions);
 /*
 var numMovers = 0;
 */
+var pizzaSpace = 256;
 var rows = 0;
 var cols = 0;
+var oldRows;
+var oldCols;
 var moverArray = [];
+var bodyWidth;
+var screenHeight;
 
 function makeMovingPizzas() {
-  var pizzaSpace = 256;
-  var bodyWidth = document.body.clientWidth;
-  var screenHeight = window.innerHeight;
-  pixelRatio = window.devicePixelRatio;
+  bodyWidth = document.body.clientWidth;
+  screenHeight = window.innerHeight;
   cols = Math.ceil(bodyWidth / pizzaSpace) + 2;
   rows = Math.ceil(screenHeight / pizzaSpace);
-  console.log('bodyWidth ' + bodyWidth);
-  console.log('cols ' + cols);
-  console.log('screenHeight ' + screenHeight);
-  console.log('rows ' + rows);
-  console.log('pixelRatio ' + pixelRatio);
 
   for (var i = 0; i < rows; i++) {
     var rowTop = i * pizzaSpace + 'px';
     moverArray[i] = [];
     for (var j = 0; j < cols; j++) {
-/*
-      numMovers++;
-*/
-      var elem = document.createElement('img');
-      elem.className = 'mover';
-      elem.src = "img/pizza.png";
-      elem.style.top = rowTop;
-      elem.style.left = j * pizzaSpace + 'px';
-
-      moverArray[i][j] = elem;
-/*
-      moverArray.push(elem);
-*/
-      // replace querySelector with getElementById
-      document.getElementById("movingPizzas1").appendChild(elem);
+      addMover(i, j, rowTop);
     }
   }
 }
 
-function updateMovingPizzas() {
-  console.log('resize event')
-  moverArray = [];
+function calculateGridDimensions() {
+  console.log('calculateGridDimensions');
+  bodyWidth = document.body.clientWidth;
+  screenHeight = window.innerHeight;
+  cols = Math.ceil(bodyWidth / pizzaSpace) + 2;
+  rows = Math.ceil(screenHeight / pizzaSpace);
+}
 
-/*
-  for (var i = 0; i < numMovers; i++) {
-    moverArray.pop();
-    console.log('updating');
+function updateMovingPizzas() {
+  console.log('resize event');
+
+  bodyWidth = document.body.clientWidth;
+  screenHeight = window.innerHeight;
+  var newCols = Math.ceil(bodyWidth / pizzaSpace) + 2;
+  var newRows = Math.ceil(screenHeight / pizzaSpace);
+
+  console.log('newRows = ' + newRows + " rows = " + rows);
+  if (newRows === rows && newCols !== cols) {
+    if (newCols < cols) {
+      console.log('00 - columns decrease')
+      for (i = 0; i < newRows; i++) {
+        for (j = newCols; j < cols; j++) {
+          removeMover(i, j);
+        }
+      }
+    } else {
+      console.log('00 - columns increase')
+      for (i = 0; i < newRows; i++) {
+        var rowTop = i * pizzaSpace + 'px';
+        for (j = cols; j < newCols; j++) {
+          addMover(i, j, rowTop);
+        }
+      }
+    }
   }
-*/
+
+  if (newRows < rows) {
+    console.log('aa - rows decrease');
+    for (i = newRows; i < rows; i++) {
+      for (j = 0; j < cols; j++) {
+        removeMover(i, j);
+      }
+    }
+    if (newCols < cols) {
+      console.log('aa - columns decrease');
+      for (i = 0; i < newRows; i++) {
+        for (j = newCols; j < cols; j++) {
+          removeMover(i, j);
+        }
+      }
+    } else if (newCols > cols) {
+      console.log('aa - columns increase');
+      for (i = 0; i < newRows; i++) {
+        var rowTop = i * pizzaSpace + 'px';
+        for (j = cols; j < newCols; j++) {
+          addMover(i, j, rowTop);
+        }
+      }
+    }
+  }
+
+  if (newRows > rows) {
+    for (i = rows; i < newRows; i++) {
+      var rowTop = i * pizzaSpace + 'px';
+      moverArray[i] = [];
+      for (j = 0; j < cols; j++) {
+        addMover(i, j, rowTop);
+      }
+    }
+    if (newCols < cols) {
+      for (i = 0; i < rows; i++) {
+        for (j = newCols; j < cols; j++) {
+          removeMover(i, j);
+        }
+      }
+    } else if (newCols > cols) {
+      for (i = 0; i < newRows; i++) {
+        var rowTop = i * pizzaSpace + 'px';
+        for (j = cols; j < newCols; j++) {
+          addMover(i, j, rowTop);
+        }
+      }
+    }
+  }
+
+  cols = newCols;
+  rows = newRows;
+}
+
+function adjustMoverGrid(oldRows, oldCols) {
+  console.log('adjustMoverGrid')
+  console.log('row = ' + rows + " oldRows = " + oldRows);
+  if (rows < oldRows) {
+    console.log('aa');
+    for (i = rows; i < oldRows; i++) {
+      for (j = 0; j < oldCols; j++) {
+        removeMover(i, j);
+      }
+    }
+    if (cols < oldCols) {
+      for (i = 0; i < rows; i++) {
+        for (j = cols; j < oldCols; j++) {
+          removeMover(i, j);
+        }
+      }
+    } else if (cols > oldCols) {
+      for (i = 0; i < rows; i++) {
+        var rowTop = i * pizzaSpace + 'px';
+        for (j = oldCols; j < cols; j++) {
+          addMover(i, j, rowTop);
+        }
+      }
+    }
+    return;
+  }
+
+  if (rows > oldRows) {
+    for (i = oldRows; i < rows; i++) {
+      var rowTop = i * pizzaSpace + 'px';
+      moverArray[i] = [];
+      for (j = 0; j < oldCols; j++) {
+        addMover(i, j, rowTop);
+      }
+    }
+    if (cols < oldCols) {
+      for (i = 0; i < oldRows; i++) {
+        for (j = cols; j < oldCols; j++) {
+          removeMover(i, j);
+        }
+      }
+    } else if (cols > oldCols) {
+      for (i = 0; i < rows; i++) {
+        var rowTop = i * pizzaSpace + 'px';
+        for (j = oldCols; j < cols; j++) {
+          addMover(i, j, rowTop);
+        }
+      }
+    }
+  }
+}
+
+function removeMover(i, j) {
+  var elementID = "mover" + i + j;
+  var element = document.getElementById(elementID);
+  element.outerHTML = "";
+  delete element;
+  moverArray[i].splice(j, 0);
+  console.log('removed mover ' + elementID);
+}
+
+function addMover(i, j, rowTop) {
+  var elem = document.createElement('img');
+  elem.className = 'mover';
+  elem.src = "img/pizza.png";
+  elem.id = "mover" + i + j;
+  elem.style.top = rowTop;
+  elem.style.left = j * pizzaSpace + 'px';
+  moverArray[i][j] = elem;
+  document.getElementById("movingPizzas1").appendChild(elem);
+  console.log('added mover ' + elem.id)
 }
 
 // Generates the sliding pizzas when the page loads.
 document.addEventListener('DOMContentLoaded', makeMovingPizzas);
 window.addEventListener('resize', updateMovingPizzas);
-
-
-/*
-// Generates the sliding pizzas when the page loads.
-document.addEventListener('DOMContentLoaded', function() {
-  var cols = 8;
-  var s = 256;
-  for (var i = 0; i < numMovers; i++) {
-    var elem = document.createElement('img');
-    elem.className = 'mover';
-    elem.src = "img/pizza.png";
-    elem.basicLeft = (i % cols) * s;
-    elem.style.top = (Math.floor(i / cols) * s) + 'px';
-
-    document.querySelector("#movingPizzas1").appendChild(elem);
-  }
-  setPositions();
-});
-
-*/
