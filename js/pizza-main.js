@@ -547,12 +547,10 @@ function addMover(i, j, rowTop) {
 }
 
 function removeMover(i, j) {
-  var elementID = "mover" + i + j;
-  var element = document.getElementById(elementID);
-  element.outerHTML = "";
-  delete element;
+  var element = moverArray[i][j];
+  element.parentNode.removeChild(element);
   moverArray[i].splice(j, 0);
-  console.log('removed mover ' + elementID);
+  console.log('removed mover ' + element);
 }
 
 function makeMovingPizzas() {
