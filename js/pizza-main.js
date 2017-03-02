@@ -485,20 +485,58 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
   console.log("Average scripting time to generate last 10 frames: " + sum / 10 + "ms");
 }
 
-// The following code for sliding background pizzas was pulled from Ilya's demo found at:
-// https://www.igvita.com/slides/2012/devtools-tips-and-tricks/jank-demo.html
+
+// runs updatePositions on scroll
+window.addEventListener('scroll', onScroll);
+
+var latestKnownScrollTop = 0;
+var updating = false;
+
+function onScroll() {
+  latestKnownScrollTop = document.body.scrollTop / 1250;
+  if (!updating) {
+    requestUpdate();
+  } else {
+    console.log('failed in onscroll');
+  }
+}
+
+/*
+function onScroll() {
+  console.log('scrolling ');
+  if(!updating) {
+    console.log('updating ' + updating);
+    updating = true;
+    console.log('updating ' + updating);
+    latestKnownScrollTop = document.body.scrollTop / 1250;
+    requestAnimationFrame(updatePositions);
+  } else {
+    console.log('aborted scroll');
+  }
+}
+*/
+function requestUpdate() {
+  if(!updating) {
+    console.log('updating ' + updating);
+    updating = true;
+    requestAnimationFrame(updatePositions);
+  } else {
+    console.log('aborted scroll');
+  }
+}
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
+  console.log('inside updatePositions updating = ' + updating);
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var ScrollTop = document.body.scrollTop / 1250;
+  var currentScrollTop = latestKnownScrollTop;
   var phaseArray = [];
   var moverNumber = 0;
 
   for (var i = 0; i < 5; i++) {
-    phaseArray.push(Math.sin(ScrollTop + i));
+    phaseArray.push(Math.sin(currentScrollTop + i));
   }
 
   for (var i = 0; i < rows; i++) {
@@ -506,13 +544,8 @@ function updatePositions() {
       moverArray[i][j].style.transform = 'translateX(' + (100 * phaseArray[moverNumber % 5]) + 'px)';
       moverNumber++;
     }
+    console.log('done ' + i);
   }
-
-/*
-  for (var i = 0; i < numMovers; i++) {
-    moverArray[i].style.transform = 'translateX(' + (100 * phaseArray[i % 5]) + 'px)';
-  }
-*/
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
   // Super easy to create custom metrics.
@@ -522,13 +555,14 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
+
+  makeFalse();
 }
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
-/*
-var numMovers = 0;
-*/
+function makeFalse() {
+  updating = false;
+}
+
 var pizzaSpace = 256;
 var rows = 0;
 var cols = 0;
@@ -543,20 +577,14 @@ function addMover(i, j, rowTop) {
   elem.style.left = j * pizzaSpace + 'px';
   moverArray[i][j] = elem;
   document.getElementById("movingPizzas1").appendChild(elem);
-  console.log('added mover ' + elem.id)
 }
 
 function removeMover(i, j) {
-
   var element = moverArray[i][j];
-/*
-  element.parentNode.removeChild(element);
-*/
   element.outerHTML = "";
   delete element;
 
   moverArray[i].splice(j, 0);
-  console.log('removed mover ' + element);
 }
 
 function makeMovingPizzas() {
@@ -575,24 +603,19 @@ function makeMovingPizzas() {
 }
 
 function updateMovingPizzas() {
-  console.log('resize event');
-
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;
   var newCols = Math.ceil(bodyWidth / pizzaSpace) + 2;
   var newRows = Math.ceil(screenHeight / pizzaSpace);
 
-  console.log('newRows = ' + newRows + " rows = " + rows);
   if (newRows === rows && newCols !== cols) {
     if (newCols < cols) {
-      console.log('00 - columns decrease')
       for (i = 0; i < newRows; i++) {
         for (j = newCols; j < cols; j++) {
           removeMover(i, j);
         }
       }
     } else {
-      console.log('00 - columns increase')
       for (i = 0; i < newRows; i++) {
         var rowTop = i * pizzaSpace + 'px';
         for (j = cols; j < newCols; j++) {
@@ -603,21 +626,18 @@ function updateMovingPizzas() {
   }
 
   if (newRows < rows) {
-    console.log('aa - rows decrease');
     for (i = newRows; i < rows; i++) {
       for (j = 0; j < cols; j++) {
         removeMover(i, j);
       }
     }
     if (newCols < cols) {
-      console.log('aa - columns decrease');
       for (i = 0; i < newRows; i++) {
         for (j = newCols; j < cols; j++) {
           removeMover(i, j);
         }
       }
     } else if (newCols > cols) {
-      console.log('aa - columns increase');
       for (i = 0; i < newRows; i++) {
         var rowTop = i * pizzaSpace + 'px';
         for (j = cols; j < newCols; j++) {
