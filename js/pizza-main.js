@@ -547,8 +547,14 @@ function addMover(i, j, rowTop) {
 }
 
 function removeMover(i, j) {
+
   var element = moverArray[i][j];
+/*
   element.parentNode.removeChild(element);
+*/
+  element.outerHTML = "";
+  delete element;
+
   moverArray[i].splice(j, 0);
   console.log('removed mover ' + element);
 }
