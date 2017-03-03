@@ -489,35 +489,10 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 // runs updatePositions on scroll
 window.addEventListener('scroll', onScroll);
 
-var latestKnownScrollTop = 0;
 var updating = false;
 
 function onScroll() {
-  latestKnownScrollTop = document.body.scrollTop / 1250;
-  if (!updating) {
-    requestUpdate();
-  } else {
-    console.log('failed in onscroll');
-  }
-}
-
-/*
-function onScroll() {
-  console.log('scrolling ');
   if(!updating) {
-    console.log('updating ' + updating);
-    updating = true;
-    console.log('updating ' + updating);
-    latestKnownScrollTop = document.body.scrollTop / 1250;
-    requestAnimationFrame(updatePositions);
-  } else {
-    console.log('aborted scroll');
-  }
-}
-*/
-function requestUpdate() {
-  if(!updating) {
-    console.log('updating ' + updating);
     updating = true;
     requestAnimationFrame(updatePositions);
   } else {
@@ -527,11 +502,10 @@ function requestUpdate() {
 
 // Moves the sliding background pizzas based on scroll position
 function updatePositions() {
-  console.log('inside updatePositions updating = ' + updating);
   frame++;
   window.performance.mark("mark_start_frame");
 
-  var currentScrollTop = latestKnownScrollTop;
+  var currentScrollTop = document.body.scrollTop / 1250;
   var phaseArray = [];
   var moverNumber = 0;
 
@@ -544,7 +518,6 @@ function updatePositions() {
       moverArray[i][j].style.transform = 'translateX(' + (100 * phaseArray[moverNumber % 5]) + 'px)';
       moverNumber++;
     }
-    console.log('done ' + i);
   }
 
   // User Timing API to the rescue again. Seriously, it's worth learning.
@@ -556,10 +529,6 @@ function updatePositions() {
     logAverageFrame(timesToUpdatePosition);
   }
 
-  makeFalse();
-}
-
-function makeFalse() {
   updating = false;
 }
 
