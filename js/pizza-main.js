@@ -507,7 +507,6 @@ function updatePositions() {
 
   var currentScrollTop = document.body.scrollTop / 1250;
   var phaseArray = [];
-  var moverNumber = 0;
 
   for (var i = 0; i < 5; i++) {
     phaseArray.push(Math.sin(currentScrollTop + i) * 100);
@@ -515,8 +514,7 @@ function updatePositions() {
 
   for (var i = 0; i < rows; i++) {
     for (var j = 0; j < cols; j++) {
-      moverArray[i][j].style.transform = 'translateX(' + (phaseArray[moverNumber % 5]) + 'px)';
-      moverNumber++;
+      moverArray[i][j].style.transform = 'translateX(' + (phaseArray[(i + j) % 5]) + 'px)';
     }
   }
 
