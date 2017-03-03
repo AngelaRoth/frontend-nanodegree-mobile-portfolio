@@ -514,14 +514,9 @@ function updatePositions() {
   }
 
   for (var i = 0; i < rows; i++) {
-    console.log(updating);
     for (var j = 0; j < cols; j++) {
       moverArray[i][j].style.transform = 'translateX(' + (phaseArray[moverNumber % 5]) + 'px)';
       moverNumber++;
-    }
-    if (i === (rows - 1)) {
-      updating = false;
-      console.log(updating);
     }
   }
 
@@ -533,9 +528,8 @@ function updatePositions() {
     var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
     logAverageFrame(timesToUpdatePosition);
   }
-/*
+
   updating = false;
-*/
 }
 
 var pizzaSpace = 256;
