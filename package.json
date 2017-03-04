@@ -1,0 +1,32 @@
+{
+  "name": "frontend-nanodegree-mobile-portfolio",
+  "version": "1.0.0",
+  "description": "an attempt to optimize page speed",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AngelaRoth/frontend-nanodegree-mobile-portfolio.git"
+  },
+  "keywords": [
+    "udacity",
+    "speed",
+    "optimization"
+  ],
+  "author": "angela roth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AngelaRoth/frontend-nanodegree-mobile-portfolio/issues"
+  },
+  "homepage": "https://github.com/AngelaRoth/frontend-nanodegree-mobile-portfolio#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-critical": "^0.2.2",
+    "grunt-mkdir": "^1.0.0",
+    "grunt-responsive-images": "^1.10.1"
+  }
+}
