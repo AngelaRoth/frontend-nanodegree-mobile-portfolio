@@ -505,7 +505,7 @@ var updating = false;
 function addMover(i, j, rowTop) {
   var elem = document.createElement('img');
   elem.className = 'mover';
-  elem.src = "img/pizza.png";
+  elem.src = "img/pizza-move.png";
   elem.id = "mover" + i + "-" + j;    // Not used currently
   elem.style.top = rowTop;
   elem.style.left = j * pizzaSpace + 'px';
