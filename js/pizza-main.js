@@ -460,7 +460,6 @@ var resizePizzas = function(size) {
   window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
   var timeToResize = window.performance.getEntriesByName("measure_pizza_resize");
   console.log("Time to resize pizzas: " + timeToResize[timeToResize.length-1].duration + "ms");
-  console.log('resizing');
 };
 
 window.performance.mark("mark_start_generating"); // collect timing data
@@ -517,14 +516,16 @@ function addMover(i, j, rowTop) {
 // Delete a moving pizza from the grid of moving pizzas
 // i = row number;  j = column number
 function removeMover(i, j) {
+  // remove element from DOM
   var element = moverArray[i][j];
   element.outerHTML = "";
   delete element;
 
+  // remove element from moverArray
   moverArray[i].splice(j, 0);
 }
 
-// Create a new grid of moving pizzas (i.e. on screen load or reload)
+// Create a new grid of moving pizzas (i.e. upon screen load or reload)
 function makeMovingPizzas() {
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;
@@ -532,18 +533,20 @@ function makeMovingPizzas() {
   rows = Math.ceil(screenHeight / pizzaSpace);
 
   for (var i = 0; i < rows; i++) {
-    var rowTop = i * pizzaSpace + 'px';
-    moverArray[i] = [];
+    var rowTop = i * pizzaSpace + 'px';     // calculate top of this row
+    moverArray[i] = [];                     // an array of pizzas in row i
     for (var j = 0; j < cols; j++) {
       addMover(i, j, rowTop);
     }
   }
 }
 
-// Update the grid of moving pizzas (i.e. on screen resize)
+// Update the grid of moving pizzas (i.e. upon screen resize)
 // Pizzas are custom added or removed depending on how the grid changes;
-// they are not simply reshuffled into new locations
-// See the README for an explanation of my thinking behind this crazy code
+// they are not simply reshuffled into new locations.
+// This also allows pizzas to be "plucked" from the DOM tree without
+// first being "gotten" (i.e. by using something like getElementById().)
+// See the README for my long reasoning behind this method.
 function updateMovingPizzas() {
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;

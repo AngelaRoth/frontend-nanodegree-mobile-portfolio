@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content=" FILL ME IN ">
     <meta name="author" content=" FILL ME IN ">
-    <title>Cameron Pittman: Portfolio</title>
+    <title>Grizz von Grizzmon: Portfolio</title>
 
-    <!-- Hmm, what is the impact of web fonts on speed? Measure it... -->
-<!--
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
- -->
+    <!-- Removed link to expensive 'Open Sans' Web font -->
+
+    <!-- Used grunt-critical to extract & inline critical-path CSS from HTML -->
     <style type="text/css">
       html{font-size:100%;overflow-y:scroll;-ms-text-size-adjust:100%;-webkit-text-size-adjust:none}body{margin:0;font-size:14px;line-height:1.61;font-weight:400}body{font-family:Verdana,Geneva,sans-serif;color:#333}a{color:#12c}a:visited{color:#61c}strong{font-weight:700}ul{margin:1em 0;padding:0 0 0 20px}img{border:0;max-width:100%}body{background:#fff}.container,footer,header{max-width:45em;margin:0 auto}header{padding:0 .5em;color:#c90b0b}header img{border-radius:40px;float:left}header p{font-size:1.5em;font-weight:700;padding-left:4em}header p span{font-size:.8em;font-weight:400}.hero{padding:2em;background-color:#f8f8f8;font-size:1.2em;border-bottom:1px solid #ccc;border-top:1px solid #ccc}.content{padding:1em 1em}.content li{list-style-type:none;font-size:1.1em}li img{float:left;padding-right:1em}li p{font-size:.9em;font-style:italic}footer{padding:0 .5em;border-top:1px solid #ccc}footer span{float:right;font-style:italic}@media only screen and (max-width:480px){body{font-size:12px}header p{padding-left:4.5em}}html{font-size:100%;overflow-y:scroll;-ms-text-size-adjust:100%;-webkit-text-size-adjust:none}body{margin:0;font-size:14px;line-height:1.61;font-weight:400}body{font-family:Verdana,Geneva,sans-serif;color:#333}a{color:#12c}a:visited{color:#61c}strong{font-weight:700}ul{margin:1em 0;padding:0 0 0 20px}img{border:0;max-width:100%}body{background:#fff}.container,header{max-width:45em;margin:0 auto}header{padding:0 .5em;color:#c90b0b}header img{border-radius:40px;float:left}header p{font-size:1.5em;font-weight:700;padding-left:4em}header p span{font-size:.8em;font-weight:400}.hero{padding:2em;background-color:#f8f8f8;font-size:1.2em;border-bottom:1px solid #ccc;border-top:1px solid #ccc}.content{padding:1em 1em}.content li{list-style-type:none;font-size:1.1em}li img{float:left;padding-right:1em}@media only screen and (max-width:480px){body{font-size:12px}header p{padding-left:4.5em}}
     </style>
@@ -28,7 +27,9 @@
       ga('create', 'UA-XXXX-Y');
       ga('send', 'pageview');
     </script>
-    <script src="http://www.google-analytics.com/analytics.js" async></script>
+    <!-- Added async attribute to google-analytics js
+    (this can't be critical to the page!) -->
+    <script async src="http://www.google-analytics.com/analytics.js"></script>
     <script async src="js/perfmatters.js"></script>
   </head>
 
@@ -46,6 +47,8 @@
       <div class="content">
         <ul>
           <li>
+            <!-- I downloaded all web-linked images (some links seemed slow!),
+            then resized and compressed them. -->
             <img src="img/2048-thumb.jpg">
             <a href="project-2048.html">Build Your Own 2048!</a>
             <p>I made my own version of 2048. How cool is that!?</p>
@@ -64,6 +67,10 @@
           </li>
 
           <li>
+            <!-- I made a special "thumbnail" version of the pizzaria,
+            instead of referencing the big image and scaling it down
+            using inline CSS.
+            I also moved all pizza code out of the "views folder" -->
             <img src="img/pizzeria-thumb.jpg">
             <a href="pizza.html">Cam's Pizzeria</a>
             <p>Who wants a performant pizza?</p>
