@@ -101,13 +101,25 @@
             <input id="sizeSlider" type="range" min="1" max="3" value="2" step="1" onchange="resizePizzas(this.value)"></input>
           </div>
         </div>
-        <!-- On load, the random pizza container is of class mediumRandomPizzas
-        (this class will be changed when the slider is moved) -->
+    <!-- On load, the random pizza container is of class mediumRandomPizzas
+         (this class will be changed when the slider is moved) -->
         <div id="randomPizzas" class="row mediumRandomPizzas">
+      <!-- All other attributes of divs of class randomPizzaContainer
+           have been moved elsewhere.
+           * height is defined in pizza-style.css
+           * width is determined by the class of the parent container
+           * id has been removed because it was never referenced
+             (though it might be useful if we allow users to search for
+             specific pizzas in future) -->
           <div class="randomPizzaContainer">
+        <!-- Assign "pizza image containers" and "pizza description containers"
+             a class (here and when new, random ones are created in JavaScript)
+             instead of assigning them a style via inline CSS.
+             Assign styles to the class in pizza-style.css -->
             <div class="pizzaImageContainer">
               <img src="img/pizza.png" class="img-responsive">
             </div>
+        <!-- "pizza description container" (restyled as above) -->
             <div class="pizzaDescriptionContainer">
               <h4>The Udacity Special</h4>
               <ul>

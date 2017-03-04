@@ -29,6 +29,8 @@ form {
   font-weight: 800;
 }
 
+/* Define height (and actual width) here, and not in JavaScript.
+Include will-change transform to give browser a hint */
 .mover {
   position: fixed;
   width: 73.333px;
@@ -37,6 +39,7 @@ form {
   will-change: transform;
 }
 
+/* Define height here, and not in in-line CSS and JavaScript. */
 .randomPizzaContainer {
   height: 325px;
   float: left;
@@ -53,6 +56,9 @@ form {
   background-color: rgba(240, 60, 60, 0.8);
 }
 
+/* Two new classes to prevent having to define the properties of pizza image
+and pizza description containers using inline CSS (and to prevent having
+to define that inline CSS in JavaScript). */
 .pizzaImageContainer {
   width: 35%;
 }
@@ -61,6 +67,11 @@ form {
   width: 65%;
 }
 
+/* All .randomPizzaContainers who are children of an element
+of class .smallRandomPizzas get a relative width of 25%.
+(Likewise for medium and largeRandomPizzas)
+The changePizzaSizes function is used to alter the classList
+of the parent element. */
 .smallRandomPizzas .randomPizzaContainer {
   width: 25%;
 }

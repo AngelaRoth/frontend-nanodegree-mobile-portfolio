@@ -371,6 +371,8 @@ var pizzaElementGenerator = function(i) {
   pizzaContainer.classList.add("randomPizzaContainer");
 
   pizzaImageContainer = document.createElement("div");
+  // NEW: add class to pizza image containers
+  // so styles can be assigned in style sheet
   pizzaImageContainer.classList.add("pizzaImageContainer");
 
   pizzaImage = document.createElement("img");
@@ -378,6 +380,8 @@ var pizzaElementGenerator = function(i) {
   pizzaImage.classList.add("img-responsive");
 
   pizzaDescriptionContainer = document.createElement("div");
+  // NEW: add class to pizza description containers
+  // so styles can be assigned in style sheet
   pizzaDescriptionContainer.classList.add("pizzaDescriptionContainer");
 
   pizzaImageContainer.appendChild(pizzaImage);
