@@ -396,7 +396,7 @@ var pizzaElementGenerator = function(i) {
 };
 
 
-//Moved pizzasDiv to be a global variable so it is only "gotten" once
+//NEW: Moved pizzasDiv to be a global variable so it is only "gotten" once
 //and so it can be used in the resizePizzas function
 var pizzasDiv = document.getElementById("randomPizzas");
 
@@ -423,11 +423,12 @@ var resizePizzas = function(size) {
 
   changeSliderLabel(size);
 
-  // Determines new width of pizza elements.
-  // Iterates through all pizza elements to assign new width.
-
-
-
+  // NEW: I updated changePizzaSizes to handle all the requirements of a change
+  // of pizza slider position. The determineDx function is gone.
+  // This function alters the classList of the element #randomPizzas,
+  // which is the parent element of .randomPizzaContainer.
+  // CSS is then used to style children of the different classes which may
+  // be applied.
   function changePizzaSizes(size) {
 
     switch(size) {
@@ -486,66 +487,31 @@ function logAverageFrame(times) {   // times is the array of User Timing measure
 }
 
 
-// runs updatePositions on scroll
-window.addEventListener('scroll', onScroll);
-
-var updating = false;
-
-function onScroll() {
-  if(!updating) {
-    updating = true;
-    requestAnimationFrame(updatePositions);
-  } else {
-    console.log('aborted scroll');
-  }
-}
-
-// Moves the sliding background pizzas based on scroll position
-function updatePositions() {
-  frame++;
-  window.performance.mark("mark_start_frame");
-
-  var currentScrollTop = document.body.scrollTop / 1250;
-  var phaseArray = [];
-
-  for (var i = 0; i < 5; i++) {
-    phaseArray.push(Math.sin(currentScrollTop + i) * 100);
-  }
-
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
-      moverArray[i][j].style.transform = 'translateX(' + (phaseArray[(i + j) % 5]) + 'px)';
-    }
-  }
-
-  // User Timing API to the rescue again. Seriously, it's worth learning.
-  // Super easy to create custom metrics.
-  window.performance.mark("mark_end_frame");
-  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
-  if (frame % 10 === 0) {
-    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
-    logAverageFrame(timesToUpdatePosition);
-  }
-
-  updating = false;
-}
+// NEW SLIDING PIZZAS CODE:
 
 var pizzaSpace = 256;
 var rows = 0;
 var cols = 0;
+var scrollEffectExtras = 2;
 var moverArray = [];
+var updating = false;
 
+// Add a moving pizza to the grid of moving pizzas
+// i = row number;  j = column number
+// rowTop = location of top of pizza image on screen, in pixels
 function addMover(i, j, rowTop) {
   var elem = document.createElement('img');
   elem.className = 'mover';
   elem.src = "img/pizza.png";
-  elem.id = "mover" + i + j;
+  elem.id = "mover" + i + "-" + j;    // Not used currently
   elem.style.top = rowTop;
   elem.style.left = j * pizzaSpace + 'px';
   moverArray[i][j] = elem;
   document.getElementById("movingPizzas1").appendChild(elem);
 }
 
+// Delete a moving pizza from the grid of moving pizzas
+// i = row number;  j = column number
 function removeMover(i, j) {
   var element = moverArray[i][j];
   element.outerHTML = "";
@@ -554,10 +520,11 @@ function removeMover(i, j) {
   moverArray[i].splice(j, 0);
 }
 
+// Create a new grid of moving pizzas (i.e. on screen load or reload)
 function makeMovingPizzas() {
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;
-  cols = Math.ceil(bodyWidth / pizzaSpace) + 2;
+  cols = Math.ceil(bodyWidth / pizzaSpace) + scrollEffectExtras;
   rows = Math.ceil(screenHeight / pizzaSpace);
 
   for (var i = 0; i < rows; i++) {
@@ -569,12 +536,18 @@ function makeMovingPizzas() {
   }
 }
 
+// Update the grid of moving pizzas (i.e. on screen resize)
+// Pizzas are custom added or removed depending on how the grid changes;
+// they are not simply reshuffled into new locations
+// See the README for an explanation of my thinking behind this crazy code
 function updateMovingPizzas() {
   var bodyWidth = document.body.clientWidth;
   var screenHeight = window.innerHeight;
-  var newCols = Math.ceil(bodyWidth / pizzaSpace) + 2;
+  var newCols = Math.ceil(bodyWidth / pizzaSpace) + scrollEffectExtras;
   var newRows = Math.ceil(screenHeight / pizzaSpace);
 
+  // if number of rows haven't changed but number of columns have,
+  // add or remove pizzas from every row in affected columns
   if (newRows === rows && newCols !== cols) {
     if (newCols < cols) {
       for (i = 0; i < newRows; i++) {
@@ -592,6 +565,8 @@ function updateMovingPizzas() {
     }
   }
 
+  // if rows have decreased, delete pizzas from superfluous rows
+  // and then add or delete pizzas from columns as required
   if (newRows < rows) {
     for (i = newRows; i < rows; i++) {
       for (j = 0; j < cols; j++) {
@@ -614,22 +589,27 @@ function updateMovingPizzas() {
     }
   }
 
+  // If rows have increased...
   if (newRows > rows) {
+    // ...add new rows and populate them with pizzas needed
+    // to fill the new number of columns
     for (i = rows; i < newRows; i++) {
       var rowTop = i * pizzaSpace + 'px';
       moverArray[i] = [];
-      for (j = 0; j < cols; j++) {
+      for (j = 0; j < newCols; j++) {
         addMover(i, j, rowTop);
       }
     }
+    // if columns have decreased, remove pizzas from previously existing rows
     if (newCols < cols) {
       for (i = 0; i < rows; i++) {
         for (j = newCols; j < cols; j++) {
           removeMover(i, j);
         }
       }
+    // if columns have increased, add pizzas to previously existing rows
     } else if (newCols > cols) {
-      for (i = 0; i < newRows; i++) {
+      for (i = 0; i < rows; i++) {
         var rowTop = i * pizzaSpace + 'px';
         for (j = cols; j < newCols; j++) {
           addMover(i, j, rowTop);
@@ -642,6 +622,48 @@ function updateMovingPizzas() {
   rows = newRows;
 }
 
-// Generates the sliding pizzas when the page loads.
+
+// Use rAF to schedule calls to updatePositions and make updating = true
+// so no further calls will be made until updating is complete
+function onScroll() {
+  if(!updating) {
+    updating = true;
+    requestAnimationFrame(updatePositions);
+  } else {
+    console.log('aborted scroll');
+  }
+}
+
+// Move the sliding background pizzas based on scroll position
+function updatePositions() {
+  frame++;
+  window.performance.mark("mark_start_frame");
+
+  var currentScrollTop = document.body.scrollTop / 1250;
+  var phaseArray = [];
+
+  // Calculate the 5 values needed for the transform one time only
+  for (var i = 0; i < 5; i++) {
+    phaseArray.push(Math.sin(currentScrollTop + i) * 100);
+  }
+
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      moverArray[i][j].style.transform = 'translateX(' + (phaseArray[(i + j) % 5]) + 'px)';
+    }
+  }
+
+  window.performance.mark("mark_end_frame");
+  window.performance.measure("measure_frame_duration", "mark_start_frame", "mark_end_frame");
+  if (frame % 10 === 0) {
+    var timesToUpdatePosition = window.performance.getEntriesByName("measure_frame_duration");
+    logAverageFrame(timesToUpdatePosition);
+  }
+
+  // set updating to false so future calls to this function will be allowed
+  updating = false;
+}
+
 document.addEventListener('DOMContentLoaded', makeMovingPizzas);
 window.addEventListener('resize', updateMovingPizzas);
+window.addEventListener('scroll', onScroll);
