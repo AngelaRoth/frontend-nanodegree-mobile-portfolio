@@ -80,7 +80,7 @@ The brute force option would be to loop through all `.randomPizzaContainer`s and
 
 This method has the added benefit of **moving CSS-stylings out of the HTML code and into the stylesheet**. Consider the case of ten "hard-coded into the HTML" pizzas instead of two, where we are altering five style properties instead of one.  The more complex things become, the nicer it is to have everything contained in one CSS "case."
 
-### Removed Forced Reflow from updatePositions Function
+### Eliminate Forced Reflow from updatePositions Function
 
 * Now `scrollTop` is only calculated once, at the beginning of the function.
 * The five possible "phase" values are also calculated once, and stored in an array for use in the loop which calculates the transform property of each moving pizza
