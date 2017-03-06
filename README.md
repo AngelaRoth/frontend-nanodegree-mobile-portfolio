@@ -93,7 +93,7 @@ Using transform allows us to **warn the browser** that a transform is coming by 
 
 ### Don't Create More Moving Pizzas than Necessary
 
-The original program generates 200 moving pizzas and places them in 8 columns, making 25 rows of 8.  With each pizza being allotted a 256px square to move about in, it would take **one funky screen** to require a grid of 8 x 25.
+The original program generates 200 moving pizzas and places them in 8 columns, making 25 rows of 8.  With each pizza being allotted a 256px square in which to move about, it would take **one funky screen** to require a grid of 8 x 25.
 
 To avoid making (and subsequently moving) superfluous pizzas, I **calculate how many rows and columns are required** using the width of the body and the inner height of the screen (2 extra pizzas are provided per row to enhance the waving effect). I then store these pizzas in a "2-dimensional" array (an array of rows, where each row is an array of the pizzas in that row). Might it have been easier simply to assign the newly created pizzas their _top_ and _left_ positions and push them into a single "1-dimensional" array? Perhaps. But **what happens if the screen is resized?**
 
@@ -105,21 +105,21 @@ This question led me down a wild and crazy path toward dropping new pizzas into 
 
 ### Don't Update if Already Updating
 
-The program was originally written to update moving pizza positions every time a scroll was registered, regardless of whether positions were already being updated due to a previous scroll. Since scrolling "rapid-fire" by nature, this seems less than ideal.
+The program was originally written to update moving pizza positions every time a scroll event was registered, regardless of whether positions were already being updated due to a previous scroll. Since scrolling is "rapid-fire" by nature, this seems less than ideal.
 
-In my updated version, a scroll event triggers the `onScroll()` function, which only makes a call to `updatePositions()` if updating is not already occurring. The `updating' variable is set to true at the beginning of `onScroll()`, and reset to false at the end of `updatePositions()`.
+In my updated version, a scroll event triggers the `onScroll()` function, which only makes a call to `updatePositions()` if updating is not already occurring. The `updating` variable is set to true at the beginning of `onScroll()`, and reset to false at the end of `updatePositions()`.
 
-I kept the calculation of the current Scroll Top _inside_ `updatePositions()` because, now, `updatePositions()` is itself only called when appropriate.
+I kept the calculation of the current Scroll Top inside `updatePositions()` because, now, `updatePositions()` is itself only called when appropriate.
 
 * **But this didn't seem to Affect Anything:** I log an "aborted" message to the console if `onScroll()` is called when updating is already in progress, but this message **never** logs.
 
 ### Employ Request Animation Frame
 
-In order to assist scheduling of pizza position updates, the call to `updatePositions()` inside `onScroll()` is made using `requestAnimationFrame()`.  **BUT**, as with employing the `onScroll()` function itself, this didn't seem to result in a noticeable decrease in frame length.
+In order to assist scheduling of pizza position updates, the call to `updatePositions()` inside `onScroll()` is made using `requestAnimationFrame()`.  **But**, as with employing the `onScroll()` function itself, this didn't seem to result in a noticeable decrease in frame length.
 * **Curious:** I thought `onScroll()` and `requestAnimationFrame()` would provide measurable payoffs.
 
 ### Images
 
 I optimized the giant `pizzeria.jpg` image and also the `pizza.png` sourced by the stationary pizzas.
 
-Then I noticed that the moving pizzas were fixed at 1/3 the size of the main `pizza.png` image. So I **made a new `pizza-move.png'** which is only 1/3 the size of the original, and used this as the source for the moving pizzas. I figured, _why lug around bigger pizzas than necessary?_  My change means that one more image needs to be downloaded, but I do think it resulted in marginal fps improvements!  (This was the last change I made.)
+Then I noticed that the moving pizzas were fixed at 1/3 the size of the main `pizza.png` image. So I **made a new `pizza-move.png`** which is only 1/3 the size of the original, and used this as the source for the moving pizzas. I figured, _why lug around bigger pizzas than necessary?_  My change means that one more image needs to be downloaded, but I do think it resulted in marginal fps improvements!  (This was the last change I made.)
